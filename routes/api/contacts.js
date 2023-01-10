@@ -1,22 +1,22 @@
 const express = require("express");
-const ctrl = require("../../controllers");
+const contactsController = require("../../controllers/contactsController");
 const validation = require("../../middlewares/validation");
 const contactsSchema = require("../../validationSchemas/contactsSchema");
 
 const router = express.Router();
 
-router.get("/", ctrl.getContacts);
+router.get("/", contactsController.getContacts);
 
-router.get("/:contactId", ctrl.getById);
+router.get("/:contactId", contactsController.getById);
 
-router.post("/", validation(contactsSchema), ctrl.add);
+router.post("/", validation(contactsSchema), contactsController.add);
 
-router.delete("/:contactId", ctrl.removeById);
+router.delete("/:contactId", contactsController.removeById);
 
 router.put(
   "/:contactId",
-  validation(contactsSchema, "missing required name field"),
-  ctrl.updateById
+  validation(contactsSchema),
+  contactsController.updateById
 );
 
 module.exports = router;

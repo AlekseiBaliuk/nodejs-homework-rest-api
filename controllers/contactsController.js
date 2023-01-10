@@ -1,4 +1,4 @@
-// const Joi = require("joi");
+const { NotFound } = require("http-errors");
 const {
   listContacts,
   getContactById,
@@ -6,15 +6,8 @@ const {
   addContact,
   updateContact,
 } = require("../models/contacts");
-const { NotFound } = require("http-errors");
 
-// const contactsSchema = Joi.object({
-//   name: Joi.string().required(),
-//   email: Joi.string().required(),
-//   phone: Joi.string().pattern(/^\d+$/).required(),
-// });
-
-const getContacts = async (req, res, next) => {
+exports.getContacts = async (req, res, next) => {
   try {
     const contacts = await listContacts();
     res.json({ contacts });
@@ -23,66 +16,50 @@ const getContacts = async (req, res, next) => {
   }
 };
 
-const getById = async (req, res, next) => {
+exports.getById = async (req, res, next) => {
   try {
     const { contactId } = req.params;
     const contactById = await getContactById(contactId);
     if (!contactById) {
       throw new NotFound("Not found");
     }
-    res.json(contactById);
+    res.send(contactById);
   } catch (error) {
     next(error);
   }
 };
 
-const add = async (req, res, next) => {
+exports.add = async (req, res, next) => {
   try {
-    // const { error } = contactsSchema.validate(req.body);
-    // if (error) {
-    //   throw new BadRequest("missing required name field");
-    // }
     const newContact = await addContact(req.body);
-    res.status(201).json(newContact);
+    res.status(201).send(newContact);
   } catch (error) {
     next(error);
   }
 };
 
-const removeById = async (req, res, next) => {
+exports.removeById = async (req, res, next) => {
   try {
     const { contactId } = req.params;
     const deletedContact = await removeContact(contactId);
     if (!deletedContact) {
       throw new NotFound("Not found");
     }
-    res.json({ message: "contact deleted" });
+    res.send({ message: "contact deleted" });
   } catch (error) {
     next(error);
   }
 };
 
-const updateById = async (req, res, next) => {
+exports.updateById = async (req, res, next) => {
   try {
-    // const { error } = contactsSchema.validate(req.body);
-    // if (error) {
-    //   throw new BadRequest("missing fields");
-    // }
     const { contactId } = req.params;
     const updatedContact = await updateContact(contactId, req.body);
     if (!updatedContact) {
       throw new NotFound("Not found");
     }
-    res.json(updatedContact);
+    res.send(updatedContact);
   } catch (error) {
     next(error);
   }
-};
-
-module.exports = {
-  getContacts,
-  getById,
-  add,
-  removeById,
-  updateById,
 };
