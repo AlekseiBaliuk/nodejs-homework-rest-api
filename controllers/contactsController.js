@@ -23,7 +23,7 @@ exports.getById = async (req, res, next) => {
     if (!contactById) {
       throw new NotFound("Not found");
     }
-    res.send(contactById);
+    res.json(contactById);
   } catch (error) {
     next(error);
   }
@@ -32,7 +32,7 @@ exports.getById = async (req, res, next) => {
 exports.add = async (req, res, next) => {
   try {
     const newContact = await addContact(req.body);
-    res.status(201).send(newContact);
+    res.status(201).json(newContact);
   } catch (error) {
     next(error);
   }
@@ -45,7 +45,7 @@ exports.removeById = async (req, res, next) => {
     if (!deletedContact) {
       throw new NotFound("Not found");
     }
-    res.send({ message: "contact deleted" });
+    res.json({ message: "contact deleted" });
   } catch (error) {
     next(error);
   }
@@ -58,7 +58,7 @@ exports.updateById = async (req, res, next) => {
     if (!updatedContact) {
       throw new NotFound("Not found");
     }
-    res.send(updatedContact);
+    res.json(updatedContact);
   } catch (error) {
     next(error);
   }
