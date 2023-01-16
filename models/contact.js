@@ -1,7 +1,8 @@
 const { Schema, model } = require("mongoose");
 const Joi = require("joi");
+const { handleMongooseError } = require("../helpers");
 
-const contactModel = Schema(
+const contactSchema = new Schema(
   {
     name: {
       type: String,
@@ -9,6 +10,7 @@ const contactModel = Schema(
     },
     email: {
       type: String,
+      match: /^[\w-\\.]+@([\w-]+\.)+[\w-]{2,4}$/gi,
     },
     phone: {
       type: String,
@@ -21,6 +23,7 @@ const contactModel = Schema(
   { versionKey: false, timestamps: true }
 );
 
+contactSchema.post("save", handleMongooseError);
 
 const contactsJoiSchema = Joi.object({
   name: Joi.string().required(),
@@ -33,8 +36,6 @@ const contactsJoiStatusSchema = Joi.object({
   favorite: Joi.boolean().required().error(new Error("missing field favorite")),
 });
 
-// module.exports = { contactsJoiSchema, contactsJoiStatusSchema };
-
-const Contact = model("contact", contactModel);
+const Contact = model("contact", contactSchema);
 
 module.exports = { Contact, contactsJoiSchema, contactsJoiStatusSchema };
