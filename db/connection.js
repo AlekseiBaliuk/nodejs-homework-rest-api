@@ -1,9 +1,9 @@
-const mongoose = require("mongoose");
+const { connect , set} = require("mongoose");
 
-mongoose.set("strictQuery", false);
+set("strictQuery", false);
 
 function connectMongo() {
-  return mongoose.connect(process.env.DB_HOST);
+  return connect(process.env.DB_HOST);
 }
 
 module.exports = { connectMongo };
