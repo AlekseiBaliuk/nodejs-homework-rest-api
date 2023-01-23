@@ -4,4 +4,19 @@ const {
   contactsJoiStatusSchema,
 } = require("./contact");
 
-module.exports = { Contact, contactsJoiSchema, contactsJoiStatusSchema };
+const {
+  User,
+  joiSignUpSchema,
+  joiLoginSchema,
+  joiSubscrSchema,
+} = require("./user");
+
+module.exports = {
+  Contact,
+  contactsJoiSchema,
+  contactsJoiStatusSchema,
+  User,
+  joiSignUpSchema,
+  joiLoginSchema,
+  joiSubscrSchema,
+};
