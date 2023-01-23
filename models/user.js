@@ -4,7 +4,8 @@ const bcrypt = require("bcrypt");
 const { Schema, model } = require("mongoose");
 const { handleMongooseError } = require("../helpers");
 
-const emailRegexp = /^[\w.]+@[\w]+.[\w]+$/;
+// const emailRegexp = /^[\w.]+@[\w]+.[\w]+$/;
+const emailRegexp = /^\w+([\\.-]?\w+)*@\w+([\\.-]?\w+)*(\.\w{2,3})+$/;
 
 const userSchema = Schema(
   {
