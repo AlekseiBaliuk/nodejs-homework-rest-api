@@ -2,7 +2,7 @@ const express = require("express");
 
 const { auth: ctrl } = require("../../controllers");
 
-const { validation, auth } = require("../../middlewares");
+const { validation, auth, passport } = require("../../middlewares");
 
 const { ctrlWrapper } = require("../../helpers");
 
@@ -13,6 +13,17 @@ const {
 } = require("../../models");
 
 const router = express.Router();
+
+router.get(
+  "/google",
+  passport.authenticate("google", { scope: ["email", "profile"] })
+);
+
+router.get(
+  "/google/callback",
+  passport.authenticate("google", { session: false }),
+  ctrlWrapper(ctrl.google)
+);
 
 router.post("/signup", validation(joiSignUpSchema), ctrlWrapper(ctrl.signup));
 
