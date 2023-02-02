@@ -12,17 +12,6 @@ const updateAvatar = async (req, res) => {
   const [extension] = originalname.split(".").reverse();
   const avatarName = `${id}.${extension}`;
 
-  // const avatarName = `${id}_${originalname}`;
-
-  // await Jimp.read(tempUpload)
-  //   .then((avatar) => {
-  //     avatar.resize(250, 250);
-  //     avatar.write(tempUpload);
-  //   })
-  //   .catch((err) => {
-  //     throw err;
-  //   });
-
   try {
     const avatar = await Jimp.read(tempUpload);
     avatar.resize(250, 250);
