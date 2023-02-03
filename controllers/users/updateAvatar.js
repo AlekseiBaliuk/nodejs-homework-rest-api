@@ -1,37 +1,52 @@
 const { User } = require("../../models");
-const path = require("path");
+// const path = require("path");
 const fs = require("fs/promises");
-const Jimp = require("jimp");
+// const Jimp = require("jimp");
+const cloudinary = require("cloudinary").v2;
 
-const avatarsDir = path.join(__dirname, "../../", "public", "avatars");
+// const avatarsDir = path.join(__dirname, "../../", "public", "avatars");
 
 const updateAvatar = async (req, res) => {
-  const { path: tempUpload, originalname } = req.file;
+  const { path: tempUpload } = req.file;
   const { _id: id } = req.user;
 
-  const [extension] = originalname.split(".").reverse();
-  const avatarName = `${id}.${extension}`;
+  cloudinary.config({
+    cloud_name: process.env.CLOUD_NAME,
+    api_key: process.env.API_KEY,
+    api_secret: process.env.API_SECRET,
+    secure: true,
+  });
 
-  // const avatarName = `${id}_${originalname}`;
-
-  // await Jimp.read(tempUpload)
-  //   .then((avatar) => {
-  //     avatar.resize(250, 250);
-  //     avatar.write(tempUpload);
-  //   })
-  //   .catch((err) => {
-  //     throw err;
+  // const uploadCloud = (pathPile) => {
+  //   return new Promise((resolve, reject) => {
+  //     cloudinary.uploader.upload(
+  //       pathPile,
+  //       { folder: "contacts", transformation: { with: 250, crop: "pad" } },
+  //       (error, result) => {
+  //         console.log(result);
+  //         if (error) reject(error);
+  //         if (result) resolve(result);
+  //       }
+  //     );
   //   });
+  // };
 
   try {
-    const avatar = await Jimp.read(tempUpload);
-    avatar.resize(250, 250);
-    avatar.write(tempUpload);
+    const { secure_url: avatarURL, public_id: idCloudAvatar } =
+      await cloudinary.uploader.upload(tempUpload, {
+        folder: "contacts",
+        transformation: { with: 250, crop: "pad" },
+      });
 
-    const resultUpload = path.join(avatarsDir, avatarName);
-    await fs.rename(tempUpload, resultUpload);
-    const avatarURL = path.join("avatars", avatarName);
-    await User.findByIdAndUpdate(id, { avatarURL });
+    const user = await User.findOne(id);
+    await cloudinary.uploader.destroy(user.idCloudAvatar, {
+      folder: "contacts",
+    });
+    
+    await User.findByIdAndUpdate(id, { avatarURL, idCloudAvatar });
+
+    await fs.unlink(tempUpload);
+
     res.json({ avatarURL });
   } catch (error) {
     await fs.unlink(tempUpload);
