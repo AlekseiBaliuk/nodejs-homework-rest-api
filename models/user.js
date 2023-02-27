@@ -61,7 +61,7 @@ const joiSignUpSchema = Joi.object({
     .required()
     .error(new Error("Invalid email format example@example.com")),
   password: Joi.string().min(6).required(),
-  repeatPassword: Joi.string().required().valid(Joi.ref("password")),
+  // repeatPassword: Joi.string().required().valid(Joi.ref("password")),
   subscription: Joi.string(),
 });
 
