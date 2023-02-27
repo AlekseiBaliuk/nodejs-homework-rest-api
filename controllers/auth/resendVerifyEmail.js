@@ -16,10 +16,18 @@ const resendVerifyEmail = async (req, res) => {
   }
 
   const verifyEmail = {
+    from: process.env.SEND_EMAIL_USER,
     to: email,
     subject: "Confirm registration",
-    html: `<a href="${BASE_URL}/api/auth/verify/${user.verificationToken}" target="_blank">Press co confirm your email</a>`,
+    text: "Please, confirm registration",
+    html: `<a href="${BASE_URL}/api/auth/verify/${user.verificationToken}" target="_blank">Press to confirm your email</a>`,
   };
+
+  // const verifyEmail = {
+  //   to: email,
+  //   subject: "Confirm registration",
+  //   html: `<a href="${BASE_URL}/api/auth/verify/${user.verificationToken}" target="_blank">Press co confirm your email</a>`,
+  // };
 
   await sendEmail(verifyEmail);
 

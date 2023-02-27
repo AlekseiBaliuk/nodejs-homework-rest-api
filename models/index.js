@@ -9,6 +9,7 @@ const {
   joiSignUpSchema,
   joiLoginSchema,
   joiSubscrSchema,
+  joiVerifyEmailSchema,
 } = require("./user");
 
 module.exports = {
@@ -19,4 +20,5 @@ module.exports = {
   joiSignUpSchema,
   joiLoginSchema,
   joiSubscrSchema,
+  joiVerifyEmailSchema,
 };
